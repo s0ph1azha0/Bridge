@@ -55,7 +55,7 @@ export default function CmcTotals() {
         </div>
       </div>
 
-      <div className="grid2" style={{ gridTemplateColumns: "minmax(0,1.6fr) minmax(0,1fr)" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
         <div className="panel">
           <h2 style={{ fontSize: 18, marginBottom: 10 }}>By company</h2>
           <div className="tablewrap">
@@ -90,7 +90,7 @@ export default function CmcTotals() {
             </table>
           </div>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+        <div className="grid2">
           <div className="panel">
             <h2 style={{ fontSize: 18, marginBottom: 12 }}>Messages sent this week</h2>
             <div className="bars">

@@ -394,7 +394,8 @@ svg.net { display: block; width: 100%; height: auto; }
 table.t { border-collapse: collapse; width: 100%; font-size: 14px; }
 table.t th { text-align: left; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 table.t td { padding: 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
-table.t td.num, table.t th.num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+table.t td.num, table.t th.num { text-align: right; }
+table.t td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 .bars { display: flex; flex-direction: column; gap: 8px; }
 .barrow { display: grid; grid-template-columns: 150px 1fr 40px; gap: 10px; align-items: center; font-size: 13.5px; }
 .barrow i { display: block; height: 10px; border-radius: 3px; background: var(--accent); }
