@@ -12,6 +12,7 @@ import NetworkMap from "./pages/NetworkMap";
 import Pipeline from "./pages/Pipeline";
 import TeamOps from "./pages/TeamOps";
 import CmcTotals from "./pages/CmcTotals";
+import ForYou from "./pages/ForYou";
 
 export default function App() {
   const { pathname } = useLocation();
@@ -24,7 +25,8 @@ export default function App() {
       <Route element={<RequireUser />}>
         <Route path="/setup" element={<Setup />} />
         <Route element={<Shell />}>
-          <Route path="/" element={<Navigate to="/companies" replace />} />
+          <Route path="/" element={<Navigate to="/for-you" replace />} />
+          <Route path="/for-you" element={<ForYou />} />
           <Route path="/companies" element={<Directory />} />
           <Route path="/companies/:id" element={<CompanyPage />} />
           <Route path="/companies/:id/interest" element={<InterestConfirm />} />
@@ -70,15 +72,19 @@ function Shell() {
     <>
       <div className="bar">
         <div className="wrap">
-          <Link to="/companies" className="brand" aria-label="Project Bridge home">
+          <Link to="/for-you" className="brand" aria-label="Project Bridge home">
             <BridgeMark />
             <b>Project Bridge</b>
           </Link>
           <nav className="nav" aria-label="Main">
+            <NavLink to="/for-you">{Icon.door()}For you</NavLink>
             <NavLink to="/companies">{Icon.building()}Companies</NavLink>
             <NavLink to="/map">{Icon.map()}Network map</NavLink>
             <NavLink to="/pipeline">
               {Icon.pipeline()}My pipeline{mySaved.length > 0 && <span className="count">{mySaved.length}</span>}
+            </NavLink>
+            <NavLink to="/cmc" className="navcmc">
+              {Icon.chart()}CMC view
             </NavLink>
           </nav>
           <span className="spacer" />
@@ -101,7 +107,7 @@ function Shell() {
                 <hr />
                 <div className="label">Prototype</div>
                 <Link to="/team" role="menuitem" onClick={() => setRole("Product team")}>Product team view</Link>
-                <Link to="/cmc" role="menuitem" onClick={() => setRole("CMC viewer")}>CMC totals (after MVP)</Link>
+                <Link to="/cmc" role="menuitem" onClick={() => setRole("CMC viewer")}>CMC view</Link>
                 <button
                   role="menuitem"
                   onClick={() => {
@@ -131,14 +137,16 @@ function Shell() {
           <span>All companies and people are fictional sample data.</span>
           <span style={{ flex: 1 }} />
           <Link to="/team">Product team view</Link>
-          <Link to="/cmc">CMC totals</Link>
+          <Link to="/cmc">CMC view</Link>
         </div>
       </footer>
 
       <nav className="tabbar" aria-label="Main">
+        <NavLink to="/for-you">{Icon.door()}For you</NavLink>
         <NavLink to="/companies">{Icon.building()}Companies</NavLink>
         <NavLink to="/map">{Icon.map()}Network</NavLink>
         <NavLink to="/pipeline">{Icon.pipeline()}Pipeline</NavLink>
+        <NavLink to="/cmc">{Icon.chart()}CMC</NavLink>
       </nav>
 
       {personId && <PersonDrawer personId={personId} />}

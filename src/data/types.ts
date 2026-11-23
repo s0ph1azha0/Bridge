@@ -35,9 +35,13 @@ export interface User {
   createdAt: ISOTime;
 }
 
+/** What matters most to the student; sets the directory's default sort. */
+export type Priority = "warmth" | "fit" | "funding" | "momentum";
+
 export interface Profile {
   id: string;
   userId: string;
+  priority: Priority; // set-up question "What matters most?" (added in v2.1)
   program: string; // "MBA", "EMBA", "MS"
   classYear: string; // "2027"
   targetFunctions: string[]; // Function_Helper ids
@@ -62,6 +66,8 @@ export interface Company {
   lastRoundSize: number; // USD millions
   priorRoundSize: number | null; // USD millions, null if unknown
   lastRoundDate: ISODate;
+  lastValuation: number | null; // USD millions, post-money at the last round; null if undisclosed
+  headcountGrowth6m: number | null; // percent change in headcount over 6 months, from monthly snapshots
   investors: string;
   hiringAreas: string[]; // Function_Helper ids
   careersUrl: string;

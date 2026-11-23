@@ -39,114 +39,128 @@ const COMPANY_SEED: CompanySeed[] = [
   {
     id: "ledgerline", name: "Ledgerline", sector: "Fintech infrastructure", hq: "Flatiron", headcountBand: "201–500",
     oneLiner: "Real-time reconciliation APIs for mid-market finance teams.",
-    stage: "Series C", lastRoundName: "Series C", totalRaised: 142, lastRoundSize: 70, priorRoundSize: 40, lastRoundDate: "2026-09-15",
+    stage: "Series C", lastRoundName: "Series C", totalRaised: 142, lastRoundSize: 70, priorRoundSize: 40, lastRoundDate: "2026-09-15", lastValuation: 900, headcountGrowth6m: 22,
     investors: "Northlight Ventures, Hudson Bay Partners, Greyline Capital", hiringAreas: ["strategy-ops", "product", "bizdev"],
     careersUrl: "https://ledgerline.example.com/careers", sourceUrl: cb("ledgerline"), verifiedDaysAgo: 3,
   },
   {
     id: "harbor", name: "Harbor AI", sector: "Enterprise AI", hq: "SoHo", headcountBand: "51–200",
     oneLiner: "AI agents that run insurance claims operations end to end.",
-    stage: "Series B", lastRoundName: "Series B", totalRaised: 48, lastRoundSize: 35, priorRoundSize: 11, lastRoundDate: "2026-06-10",
+    stage: "Series B", lastRoundName: "Series B", totalRaised: 48, lastRoundSize: 35, priorRoundSize: 11, lastRoundDate: "2026-06-10", lastValuation: 260, headcountGrowth6m: 41,
     investors: "Fieldstone Ventures, Pier 57 Capital", hiringAreas: ["gtm", "chief-of-staff"],
     careersUrl: "https://harbor-ai.example.com/careers", sourceUrl: cb("harbor-ai"), verifiedDaysAgo: 2,
   },
   {
     id: "cadence", name: "Cadence Pay", sector: "Payments", hq: "Midtown", headcountBand: "501–1,000",
     oneLiner: "Embedded payments and payouts for vertical software companies.",
-    stage: "Series D+", lastRoundName: "Series D", totalRaised: 410, lastRoundSize: 150, priorRoundSize: 120, lastRoundDate: "2026-03-18",
+    stage: "Series D+", lastRoundName: "Series D", totalRaised: 610, lastRoundSize: 250, priorRoundSize: 150, lastRoundDate: "2026-03-18", lastValuation: 4200, headcountGrowth6m: 9,
     investors: "Meridian Growth, Northlight Ventures, Atlas Crossover Fund", hiringAreas: ["strategy-ops", "bizdev", "product"],
     careersUrl: "https://cadencepay.example.com/careers", sourceUrl: cb("cadence-pay"), verifiedDaysAgo: 4,
   },
   {
     id: "tidewell", name: "Tidewell Health", sector: "Health tech", hq: "Chelsea", headcountBand: "51–200",
     oneLiner: "Care coordination software for outpatient clinics.",
-    stage: "Series B", lastRoundName: "Series B", totalRaised: 61, lastRoundSize: 45, priorRoundSize: 14, lastRoundDate: "2026-07-22",
+    stage: "Series B", lastRoundName: "Series B", totalRaised: 61, lastRoundSize: 45, priorRoundSize: 14, lastRoundDate: "2026-07-22", lastValuation: 280, headcountGrowth6m: 35,
     investors: "Bellwether Health Ventures, Canal Street Capital", hiringAreas: ["strategy-ops", "gtm", "bizdev"],
     careersUrl: "https://tidewell.example.com/careers", sourceUrl: cb("tidewell-health"), verifiedDaysAgo: 5,
   },
   {
     id: "kilnworks", name: "Kilnworks", sector: "Climate & industrial", hq: "Brooklyn Navy Yard", headcountBand: "201–500",
     oneLiner: "Procurement marketplace for low-carbon cement and steel.",
-    stage: "Series C", lastRoundName: "Series C", totalRaised: 118, lastRoundSize: 60, priorRoundSize: 30, lastRoundDate: "2026-02-11",
+    stage: "Series C", lastRoundName: "Series C", totalRaised: 118, lastRoundSize: 60, priorRoundSize: 30, lastRoundDate: "2026-02-11", lastValuation: 650, headcountGrowth6m: 18,
     investors: "Evergreen Climate Partners, Gowanus Ventures", hiringAreas: ["strategy-ops", "bizdev"],
     careersUrl: "https://kilnworks.example.com/careers", sourceUrl: cb("kilnworks"), verifiedDaysAgo: 3,
   },
   {
     id: "parcelwise", name: "Parcelwise", sector: "Logistics software", hq: "Midtown South", headcountBand: "501–1,000",
     oneLiner: "Routing and returns software for mid-size retailers.",
-    stage: "Series D+", lastRoundName: "Series D", totalRaised: 365, lastRoundSize: 120, priorRoundSize: 90, lastRoundDate: "2025-10-08",
+    stage: "Series D+", lastRoundName: "Series D", totalRaised: 365, lastRoundSize: 120, priorRoundSize: 90, lastRoundDate: "2025-10-08", lastValuation: 2100, headcountGrowth6m: 4,
     investors: "Meridian Growth, Lantern Capital", hiringAreas: ["strategy-ops", "product"],
     careersUrl: "https://parcelwise.example.com/careers", sourceUrl: cb("parcelwise"), verifiedDaysAgo: 6,
   },
   {
     id: "verity", name: "Verity Legal", sector: "Enterprise AI", hq: "NoMad", headcountBand: "51–200",
     oneLiner: "Contract review copilots for in-house legal teams.",
-    stage: "Series B", lastRoundName: "Series B", totalRaised: 39, lastRoundSize: 30, priorRoundSize: 8, lastRoundDate: "2026-07-14",
+    stage: "Series B", lastRoundName: "Series B", totalRaised: 39, lastRoundSize: 30, priorRoundSize: 8, lastRoundDate: "2026-07-14", lastValuation: 210, headcountGrowth6m: 52,
     investors: "Fieldstone Ventures, Lexicon Partners", hiringAreas: ["gtm", "chief-of-staff"],
     careersUrl: "https://veritylegal.example.com/careers", sourceUrl: cb("verity-legal"), verifiedDaysAgo: 2,
   },
   {
     id: "saltmarsh", name: "Saltmarsh", sector: "Food & commerce", hq: "Greenpoint", headcountBand: "51–200",
     oneLiner: "Wholesale ordering platform for independent restaurants.",
-    stage: "Series B", lastRoundName: "Series B", totalRaised: 33, lastRoundSize: 25, priorRoundSize: 6, lastRoundDate: "2025-03-20",
+    stage: "Series B", lastRoundName: "Series B", totalRaised: 33, lastRoundSize: 25, priorRoundSize: 6, lastRoundDate: "2025-03-20", lastValuation: 140, headcountGrowth6m: -6,
     investors: "Union Square Seed Fund, Pantry Capital", hiringAreas: ["growth", "strategy-ops"],
     careersUrl: "https://saltmarsh.example.com/careers", sourceUrl: cb("saltmarsh"), verifiedDaysAgo: 4,
   },
   {
     id: "keystone", name: "Keystone Sentry", sector: "Cybersecurity", hq: "Financial District", headcountBand: "201–500",
     oneLiner: "Identity threat detection for banks and asset managers.",
-    stage: "Series C", lastRoundName: "Series C", totalRaised: 156, lastRoundSize: 80, priorRoundSize: 50, lastRoundDate: "2026-09-03",
+    stage: "Series C", lastRoundName: "Series C", totalRaised: 156, lastRoundSize: 80, priorRoundSize: 50, lastRoundDate: "2026-09-03", lastValuation: 1100, headcountGrowth6m: 15,
     investors: "Bulwark Ventures, Greyline Capital", hiringAreas: ["gtm", "bizdev"],
     careersUrl: "https://keystonesentry.example.com/careers", sourceUrl: cb("keystone-sentry"), verifiedDaysAgo: 1,
   },
   {
     id: "atlas", name: "Atlas Robotics", sector: "Robotics", hq: "Sunset Park", headcountBand: "201–500",
     oneLiner: "Autonomous pallet movers for urban warehouses.",
-    stage: "Series C", lastRoundName: "Series C", totalRaised: 190, lastRoundSize: 100, priorRoundSize: 55, lastRoundDate: "2026-05-06",
+    stage: "Series C", lastRoundName: "Series C", totalRaised: 190, lastRoundSize: 100, priorRoundSize: 55, lastRoundDate: "2026-05-06", lastValuation: 1300, headcountGrowth6m: 12,
     investors: "Ironbridge Capital, Lantern Capital", hiringAreas: ["strategy-ops"],
     careersUrl: "https://atlasrobotics.example.com/careers", sourceUrl: cb("atlas-robotics"), verifiedDaysAgo: 5,
   },
   {
     id: "patronly", name: "Patronly", sector: "Creator economy", hq: "Williamsburg", headcountBand: "51–200",
     oneLiner: "Membership and payments tools for independent creators.",
-    stage: "Series B", lastRoundName: "Series B", totalRaised: 44, lastRoundSize: 32, priorRoundSize: 9, lastRoundDate: "2026-10-20",
+    stage: "Series B", lastRoundName: "Series B", totalRaised: 44, lastRoundSize: 32, priorRoundSize: 9, lastRoundDate: "2026-10-20", lastValuation: 230, headcountGrowth6m: 30,
     investors: "Bowline Ventures, Pier 57 Capital", hiringAreas: ["chief-of-staff", "growth"],
     careersUrl: "https://patronly.example.com/careers", sourceUrl: cb("patronly"), verifiedDaysAgo: 2,
   },
   {
     id: "girderline", name: "Girderline", sector: "Vertical software", hq: "Long Island City", headcountBand: "51–200",
     oneLiner: "Project financials for commercial construction firms.",
-    stage: "Series B", lastRoundName: "Series B", totalRaised: 52, lastRoundSize: 38, priorRoundSize: 12, lastRoundDate: "2026-01-27",
+    stage: "Series B", lastRoundName: "Series B", totalRaised: 52, lastRoundSize: 38, priorRoundSize: 12, lastRoundDate: "2026-01-27", lastValuation: 300, headcountGrowth6m: 10,
     investors: "Ironbridge Capital, Queensboro Ventures", hiringAreas: ["strategy-ops", "product"],
     careersUrl: "https://girderline.example.com/careers", sourceUrl: cb("girderline"), verifiedDaysAgo: 6,
   },
   {
     id: "fieldnote", name: "Fieldnote AI", sector: "AI for investors", hq: "Flatiron", headcountBand: "11–50",
     oneLiner: "An AI research analyst for investment teams. Raised a large seed round at a reported $1B+ valuation.",
-    stage: "Seed", lastRoundName: "Seed", totalRaised: 80, lastRoundSize: 80, priorRoundSize: null, lastRoundDate: "2026-08-19",
+    stage: "Seed", lastRoundName: "Seed", totalRaised: 80, lastRoundSize: 80, priorRoundSize: null, lastRoundDate: "2026-08-19", lastValuation: 1200, headcountGrowth6m: 120,
     investors: "Halcyon Partners, Northlight Ventures", hiringAreas: ["gtm", "strategy-ops"],
     careersUrl: "https://fieldnote.example.com/careers", sourceUrl: cb("fieldnote-ai"), verifiedDaysAgo: 1,
   },
   {
     id: "gridwise", name: "Gridwise", sector: "Climate software", hq: "Dumbo", headcountBand: "11–50",
     oneLiner: "Energy management software for commercial buildings.",
-    stage: "Series A", lastRoundName: "Series A", totalRaised: 22, lastRoundSize: 18, priorRoundSize: 4, lastRoundDate: "2026-04-15",
+    stage: "Series A", lastRoundName: "Series A", totalRaised: 22, lastRoundSize: 18, priorRoundSize: 4, lastRoundDate: "2026-04-15", lastValuation: 95, headcountGrowth6m: 25,
     investors: "Evergreen Climate Partners, Brooklyn Bridge Fund", hiringAreas: ["growth", "bizdev"],
     careersUrl: "https://gridwise.example.com/careers", sourceUrl: cb("gridwise"), verifiedDaysAgo: 3,
   },
   {
     id: "copperleaf", name: "Copperleaf Media", sector: "Media tech", hq: "Midtown", headcountBand: "11–50",
     oneLiner: "AI tools that help local newsrooms publish faster.",
-    stage: "Series A", lastRoundName: "Series A", totalRaised: 28, lastRoundSize: 20, priorRoundSize: 5, lastRoundDate: "2026-09-24",
+    stage: "Series A", lastRoundName: "Series A", totalRaised: 28, lastRoundSize: 20, priorRoundSize: 5, lastRoundDate: "2026-09-24", lastValuation: 120, headcountGrowth6m: 33,
     investors: "Bowline Ventures, Fourth Estate Fund", hiringAreas: ["product", "growth"],
     careersUrl: "https://copperleaf.example.com/careers", sourceUrl: cb("copperleaf-media"), verifiedDaysAgo: 4,
   },
   {
     id: "tessera", name: "Tessera Retail", sector: "Retail tech", hq: "SoHo", headcountBand: "51–200",
     oneLiner: "Clienteling software for luxury and specialty retail.",
-    stage: "Series B", lastRoundName: "Series B", totalRaised: 57, lastRoundSize: 40, priorRoundSize: 12, lastRoundDate: "2026-02-25",
+    stage: "Series B", lastRoundName: "Series B", totalRaised: 57, lastRoundSize: 40, priorRoundSize: 12, lastRoundDate: "2026-02-25", lastValuation: 400, headcountGrowth6m: 20,
     investors: "Maison Ventures, Canal Street Capital", hiringAreas: ["gtm", "growth"],
     careersUrl: "https://tesseraretail.example.com/careers", sourceUrl: cb("tessera-retail"), verifiedDaysAgo: 3,
+  },
+  {
+    id: "copperline", name: "Copperline", sector: "HR and payroll", hq: "Hudson Yards", headcountBand: "1,001–5,000",
+    oneLiner: "Payroll and benefits platform for small businesses.",
+    stage: "Series D+", lastRoundName: "Series E", totalRaised: 820, lastRoundSize: 300, priorRoundSize: 180, lastRoundDate: "2026-06-24", lastValuation: 6500, headcountGrowth6m: 14,
+    investors: "Meridian Growth, Atlas Crossover Fund, Northlight Ventures", hiringAreas: ["strategy-ops", "product", "bizdev"],
+    careersUrl: "https://copperline.example.com/careers", sourceUrl: cb("copperline"), verifiedDaysAgo: 2,
+  },
+  {
+    id: "kestrel", name: "Kestrel AI", sector: "AI infrastructure", hq: "Chelsea", headcountBand: "201–500",
+    oneLiner: "Cuts the cost of running AI models for enterprise teams.",
+    stage: "Series C", lastRoundName: "Series C", totalRaised: 310, lastRoundSize: 200, priorRoundSize: 80, lastRoundDate: "2026-10-07", lastValuation: 2400, headcountGrowth6m: 85,
+    investors: "Halcyon Partners, Bulwark Ventures", hiringAreas: ["gtm", "strategy-ops", "chief-of-staff"],
+    careersUrl: "https://kestrel-ai.example.com/careers", sourceUrl: cb("kestrel-ai"), verifiedDaysAgo: 1,
   },
 ];
 
@@ -217,6 +231,20 @@ const ROLE_SEED: RoleSeed[] = [
     summary: "Grow accounts with luxury houses already using Tessera in their US stores." },
   { id: "r-tr-2", companyId: "tessera", titleAsPosted: "Summer MBA Intern, Growth", functionId: "growth", jobType: "Internship", visaStated: "Yes", payStated: "$50/hour", seen: 5, verified: 3,
     summary: "A summer project on how clienteling drives repeat purchases." },
+  { id: "r-co-1", companyId: "copperline", titleAsPosted: "Strategy & Operations Associate", functionId: "strategy-ops", jobType: "Full-time", visaStated: "Yes", payStated: "$170,000–$190,000 base", seen: 6, verified: 2,
+    summary: "Join the CEO's strategy team on pricing, new markets and the annual plan." },
+  { id: "r-co-2", companyId: "copperline", titleAsPosted: "Product Manager, Benefits", functionId: "product", jobType: "Full-time", visaStated: "Yes", payStated: "$175,000–$205,000 base", seen: 12, verified: 2,
+    summary: "Own the benefits enrollment flow used by 60,000 small businesses." },
+  { id: "r-co-3", companyId: "copperline", titleAsPosted: "Partner Manager, Accounting Firms", functionId: "bizdev", jobType: "Full-time", visaStated: "Not stated", payStated: "", seen: 20, verified: 2,
+    summary: "Grow the channel of accounting firms that bring Copperline to their clients." },
+  { id: "r-co-4", companyId: "copperline", titleAsPosted: "MBA Summer Associate, Strategy", functionId: "strategy-ops", jobType: "Internship", visaStated: "Yes", payStated: "$55/hour", seen: 3, verified: 2,
+    summary: "A ten-week summer project for the strategy team, with a readout to the leadership team." },
+  { id: "r-ke-1", companyId: "kestrel", titleAsPosted: "Deployment Strategist", functionId: "gtm", jobType: "Full-time", visaStated: "Yes", payStated: "$165,000–$195,000 base", seen: 2, verified: 1,
+    summary: "Scope and launch the first deployments at large enterprise customers, then turn what you learn into the playbook." },
+  { id: "r-ke-2", companyId: "kestrel", titleAsPosted: "Chief of Staff, Revenue", functionId: "chief-of-staff", jobType: "Full-time", visaStated: "Not stated", payStated: "", seen: 9, verified: 1,
+    summary: "Run the operating rhythm for a revenue team that doubled this year." },
+  { id: "r-ke-3", companyId: "kestrel", titleAsPosted: "BizOps Lead", functionId: "strategy-ops", jobType: "Full-time", visaStated: "Yes", payStated: "$180,000 base", seen: 16, verified: 1,
+    summary: "Build the forecasting, pricing analysis and planning behind a fast-growing usage business." },
 ];
 
 /* ---------- People, their positions and CBS affiliations ---------- */
@@ -311,6 +339,18 @@ const PEOPLE_SEED: PersonSeed[] = [
   { id: "p-jordan", name: "Jordan Pierce", companyId: "tessera", title: "Head of Growth", cbs: "", employers: ["unilever"],
     aff: [{ type: "Club event speaker", club: "cwib", event: "CWiB conference keynote", date: "2026-02-20" }] },
   { id: "p-mira", name: "Mira Shah", companyId: "tessera", title: "Strategic Accounts Lead", cbs: "MBA '22", employers: ["bain"] },
+
+  { id: "p-rebecca", name: "Rebecca Lindgren", companyId: "copperline", title: "VP Strategy & Operations", cbs: "MBA '16", employers: ["mckinsey", "amex"] },
+  { id: "p-arjun", name: "Arjun Kapoor", companyId: "copperline", title: "Group Product Manager", cbs: "MBA '20", employers: ["google"],
+    aff: [{ type: "Club event speaker", club: "tech", event: "Tech Club product leaders panel", date: "2026-10-14" }] },
+  { id: "p-nadia", name: "Nadia Rahimi", companyId: "copperline", title: "Chief People Officer", cbs: "", employers: ["deloitte"],
+    aff: [{ type: "Campus speaker", event: "CBS future of work forum", date: "2026-04-09" }] },
+
+  { id: "p-samuel", name: "Samuel Adeyemi", companyId: "kestrel", title: "Co-founder & President", cbs: "MBA '17", employers: ["goldman", "bcg"],
+    aff: [{ type: "Club event speaker", club: "ai", event: "AI Club infrastructure night", date: "2026-10-22" }] },
+  { id: "p-lina", name: "Lina Ortiz", companyId: "kestrel", title: "Head of Strategy & Operations", cbs: "MBA '21", employers: ["bain"] },
+  { id: "p-chris", name: "Chris Varga", companyId: "kestrel", title: "VP Sales", cbs: "", employers: ["salesforce"],
+    aff: [{ type: "Club event speaker", club: "fintech", event: "Fintech Club panel on AI in financial services", date: "2026-09-25" }] },
 ];
 
 /* ---------- Other (fictional) students, so counts and CMC totals are not empty ---------- */
@@ -320,30 +360,33 @@ const OTHER_STUDENTS: [string, string, string][] = [
   ["u-s09", "Isla", "Novak"], ["u-s10", "Jae", "Park"], ["u-s11", "Kofi", "Mensah"], ["u-s12", "Lena", "Schulz"],
 ];
 
-/** Messages other students sent each person: [personId, days ago...]. */
-const MESSAGES_SEED: [string, number[]][] = [
-  ["p-maya", [0, 1, 2, 3, 5, 6, 12, 20]],
-  ["p-elena", [0, 1, 1, 2, 3, 4, 6]],
-  ["p-omar", [1, 2, 4, 6, 9, 30]],
-  ["p-aisha", [1, 3, 5, 15]],
-  ["p-lucas", [2, 5, 18]],
-  ["p-tessa", [3, 40]],
-  ["p-camille", [2, 4, 25]],
-  ["p-hana", [5, 33]],
-  ["p-marcus", [6, 70]],
-  ["p-julia", [20, 45]],
-  ["p-jamal", [2]],
-  ["p-sana", [11]],
-  ["p-samir", [60]],
-  ["p-sofia", [8, 50]],
-  ["p-tom", [3, 17]],
+/** Messages other students sent each person, and replies they logged: [personId, message days ago, reply days ago]. */
+const MESSAGES_SEED: [string, number[], number[]][] = [
+  ["p-maya", [0, 1, 2, 3, 5, 6, 12, 20], [10]],
+  ["p-elena", [0, 1, 1, 2, 3, 4, 6], []],
+  ["p-omar", [1, 2, 4, 6, 9, 30], [3, 7, 25]],
+  ["p-aisha", [1, 3, 5, 15], [13]],
+  ["p-lucas", [2, 5, 18], [16]],
+  ["p-tessa", [3, 40], []],
+  ["p-camille", [2, 4, 25], [22]],
+  ["p-hana", [5, 33], [30]],
+  ["p-marcus", [6, 14, 21, 40, 70], [12, 19]],
+  ["p-julia", [9, 20, 28, 45, 52, 60], [18, 26, 50]],
+  ["p-jamal", [2], []],
+  ["p-sana", [11], []],
+  ["p-samir", [60, 75, 80, 90, 95], []],
+  ["p-sofia", [8, 50], []],
+  ["p-tom", [3, 17], [15]],
+  ["p-rebecca", [2, 10, 16, 24, 35], [8, 14, 30]],
+  ["p-samuel", [1, 4], []],
+  ["p-chris", [6], []],
 ];
 
 /** Number of other students who saved each company, and how many joined its interest list. */
 const SAVES_SEED: Record<string, [number, number]> = {
   ledgerline: [9, 4], harbor: [7, 3], cadence: [11, 6], tidewell: [4, 1], kilnworks: [3, 1], parcelwise: [5, 2],
-  verity: [6, 2], saltmarsh: [2, 0], keystone: [3, 1], atlas: [1, 0], patronly: [4, 1], girderline: [0, 0],
-  fieldnote: [10, 5], gridwise: [3, 1], copperleaf: [2, 1], tessera: [5, 2],
+  verity: [6, 2], saltmarsh: [4, 3], keystone: [3, 1], atlas: [1, 0], patronly: [4, 1], girderline: [0, 0],
+  fieldnote: [10, 5], gridwise: [3, 1], copperleaf: [2, 1], tessera: [5, 2], copperline: [8, 3], kestrel: [6, 2],
 };
 
 /* ---------- Materialize ---------- */
@@ -395,20 +438,21 @@ export function buildSeed(): SeedData {
 
   const interactions: Interaction[] = [];
   let k = 0;
-  MESSAGES_SEED.forEach(([personId, ds]) => {
+  MESSAGES_SEED.forEach(([personId, ds, replies], pi) => {
     const companyId = positions.find((p) => p.personId === personId)!.companyId;
     ds.forEach((d, j) => {
-      const u = otherUsers[(k + j * 5) % otherUsers.length];
+      const u = otherUsers[(pi * 3 + j * 5) % otherUsers.length];
       interactions.push({
         id: `seed-int-${k++}`, userId: u.id, personId, companyId, type: "Message sent", capturedVia: "Mark as sent button",
         date: ts(d, 9 + (j % 8)), followUpDue: null, note: "",
       });
-      if (d > 8 && j % 2 === 0) {
-        interactions.push({
-          id: `seed-int-${k++}`, userId: u.id, personId, companyId, type: "Reply", capturedVia: "Logged manually",
-          date: ts(d - 2), followUpDue: null, note: "",
-        });
-      }
+    });
+    replies.forEach((d, j) => {
+      const u = otherUsers[(pi * 3 + j * 5) % otherUsers.length];
+      interactions.push({
+        id: `seed-int-${k++}`, userId: u.id, personId, companyId, type: "Reply", capturedVia: "Logged manually",
+        date: ts(d, 15), followUpDue: null, note: "",
+      });
     });
   });
 

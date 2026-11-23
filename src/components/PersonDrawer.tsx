@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useBridge, useToast } from "../lib/store";
-import { CONTACT_LOAD_NUDGE, addDaysISO, affsOf, currentPosition, fmtDate, liveRoles, messagesLast7, tieFor } from "../lib/compute";
+import { CONTACT_LOAD_NUDGE, addDaysISO, affsOf, currentPosition, fmtDate, liveRoles, messagesLast7, responsiveness, tieFor } from "../lib/compute";
 import { DRAFT_VARIANTS, draftMessage } from "../lib/draft";
 import type { InteractionType } from "../data/types";
 import { Avatar, Drawer, ExtLink, Icon, TiePill, tieClass } from "./ui";
-import { affiliationLabel } from "./PersonCard";
+import { affiliationLabel, RespondTag } from "./PersonCard";
 import InterestDialog from "./InterestDialog";
 
 /** Screen 2B: person drawer and message drafter. Opened from anywhere with ?person=<id>. */
@@ -29,7 +29,8 @@ export default function PersonDrawer({ personId }: { personId: string }) {
   const [variant, setVariant] = useState(0);
   const generated = useMemo(() => {
     if (!person || !position || !company || !tie || !user || !profile) return "";
-    return draftMessage({ user, profile, person, title: position.title, company, tie, roles, variant, employerName: (id) => db.employers.find((e) => e.id === id)?.name ?? id });
+    const emp = (id: string) => db.employers.find((e) => e.id === id);
+    return draftMessage({ user, profile, person, title: position.title, company, tie, roles, variant, employerName: (id) => emp(id)?.name ?? id, employerAliases: (id) => emp(id)?.aliases ?? [] });
   }, [person, position, company, tie, user, profile, roles, variant, db.employers]);
   const [text, setText] = useState(generated);
   useEffect(() => {
@@ -96,7 +97,7 @@ export default function PersonDrawer({ personId }: { personId: string }) {
               </div>
               <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 8, flexWrap: "wrap" }}>
                 <TiePill tie={tie} />
-                {tie.reasons.length === 1 && <span className="small">{tie.reasons[0].text}</span>}
+                <RespondTag r={responsiveness(person.id, db.interactions)} />
               </div>
             </div>
           </div>
@@ -116,16 +117,21 @@ export default function PersonDrawer({ personId }: { personId: string }) {
           </>
         }
       >
-        {tie.reasons.length > 1 && (
-          <div>
-            <div className="sec-title">Why {first} relates to you</div>
-            <ul className="why" style={{ margin: 0, paddingLeft: 18, display: "flex", flexDirection: "column", gap: 4, fontSize: 14 }}>
-              {tie.reasons.map((r, i) => (
+        <div>
+          <div className="sec-title">Why {first} relates to you</div>
+          <ul style={{ margin: 0, paddingLeft: 18, display: "flex", flexDirection: "column", gap: 4, fontSize: 14 }}>
+            {tie.reasons
+              .filter((r) => r.relevant)
+              .map((r, i) => (
                 <li key={i}>{r.text}</li>
               ))}
-            </ul>
-          </div>
-        )}
+          </ul>
+          {tie.reasons.some((r) => !r.relevant) && (
+            <p className="small muted" style={{ marginTop: 6 }}>
+              Also: {tie.reasons.filter((r) => !r.relevant).map((r) => r.text.replace(new RegExp(`^${first} `), "")).join("; ")}
+            </p>
+          )}
+        </div>
 
         <div className={`callout${load >= CONTACT_LOAD_NUDGE ? " warn" : ""}`}>
           <b>

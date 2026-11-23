@@ -6,6 +6,16 @@ import type { Flag, FlagStatus } from "../data/types";
 
 type Tab = "flags" | "interest" | "data" | "metrics";
 
+/** D2: source per field for the first real seed set. */
+const SOURCES: [string, string, string][] = [
+  ["Funding, valuation, investors", "PitchBook (CBS library access), Crunchbase as backup", "Weekly"],
+  ["Open roles, pay and visa text", "Greenhouse, Lever and Ashby public job APIs, plus careers pages", "Weekly"],
+  ["Headcount and 6-month growth", "LinkedIn company pages, monthly snapshots", "Monthly"],
+  ["CBS people", "Public alumni information and company team pages, then CMC and club alumni lists", "Weekly"],
+  ["Campus and club speakers", "Club event pages and CBS event listings", "Weekly"],
+  ["Replies and response data", "Bridge's own pipeline logs (Mark as sent, logged replies)", "Live"],
+];
+
 /** "As the product team, we need to": run the weekly refresh, review flags and removal requests, export interest lists, and watch the MVP metrics. */
 export default function TeamOps() {
   const [tab, setTab] = useState<Tab>("flags");
@@ -248,6 +258,33 @@ function DataFreshness() {
           {unverified.length} {unverified.length === 1 ? "role is" : "roles are"} Unverified: {unverified.map((r) => `${r.titleAsPosted} (${db.companies.find((c) => c.id === r.companyId)?.name})`).join("; ")}.
         </div>
       )}
+
+      <div className="panel">
+        <h2 style={{ fontSize: 18, marginBottom: 6 }}>Where each field comes from</h2>
+        <p className="small muted" style={{ marginBottom: 10 }}>
+          The plan for replacing sample data. Every collected fact keeps its source link and a Last Verified date.
+        </p>
+        <div className="tablewrap">
+          <table className="t">
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Source</th>
+                <th>Refresh</th>
+              </tr>
+            </thead>
+            <tbody>
+              {SOURCES.map(([f, src, freq]) => (
+                <tr key={f}>
+                  <td>{f}</td>
+                  <td>{src}</td>
+                  <td className="nowrap">{freq}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
       <div className="panel">
         <div className="tablewrap">

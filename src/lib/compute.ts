@@ -55,6 +55,19 @@ export function functionsHired(c: Company, roles: Role[]) {
   return [...new Set([...c.hiringAreas, ...liveRoles(c.id, roles).map((r) => r.functionId)])];
 }
 
+/* ---------- Funding (Q1, Q2) ---------- */
+export const FUNDING_BANDS = [
+  { id: "50", label: "$50M+ raised", min: 50 },
+  { id: "150", label: "$150M+ raised", min: 150 },
+  { id: "500", label: "$500M+ raised", min: 500 },
+] as const;
+export const UNICORN = 1000; // valuation in USD millions
+
+/** New business roles first seen in the last 30 days (Q3). */
+export function newRoles30d(companyId: string, roles: Role[], now = new Date()) {
+  return roles.filter((r) => r.companyId === companyId && !r.closed && daysSince(r.firstSeen, now) <= 30).length;
+}
+
 /* ---------- Momentum ---------- */
 export function monthsSinceRound(c: Company, now = new Date()) {
   const d = new Date(c.lastRoundDate + "T12:00:00");
@@ -92,15 +105,46 @@ export function cbsTieCount(companyId: string, db: Db) {
   return peopleAt(companyId, db).filter(({ person }) => isAlum(person) || affsOf(person.id, db.affiliations).length > 0).length;
 }
 
+/**
+ * "Likely to respond" and "Busy this week" tags (L1). Tags only, never a percentage.
+ * Likely: at least 5 logged messages, at least 30% answered, and a reply in the last 30 days.
+ * Busy: 5+ CBS messages this week; it replaces "Likely" so responsive people aren't overloaded.
+ */
+export const LIKELY_MIN_MESSAGES = 5;
+export function responsiveness(personId: string, interactions: Interaction[], now = new Date()) {
+  const mine = interactions.filter((i) => i.personId === personId);
+  const sent = mine.filter((i) => i.type === "Message sent").length;
+  const replies = mine.filter((i) => i.type === "Reply");
+  const lastReply = replies.map((i) => i.date).sort().pop();
+  const busy = messagesLast7(personId, interactions, now) >= CONTACT_LOAD_NUDGE;
+  const likely = !busy && sent >= LIKELY_MIN_MESSAGES && replies.length / sent >= 0.3 && !!lastReply && now.getTime() - new Date(lastReply).getTime() <= 30 * DAY;
+  return { busy, likely, sent };
+}
+
 export function messagesLast7(personId: string, interactions: Interaction[], now = new Date()) {
   return interactions.filter((i) => i.personId === personId && i.type === "Message sent" && now.getTime() - new Date(i.date).getTime() < 7 * DAY).length;
 }
+
+/** The single definition of tie strength, shown in the same words wherever ties appear (X1, X2). */
+export const TIE_RULE = {
+  summary:
+    "Tie strength adds two things: how the person connects to CBS (alum 2 points, campus or club speaker 1) and what you share (a past employer 2, a club they spoke at that you're in 1).",
+  levels: [
+    { label: "Strong", points: "3–4 points", example: "a CBS alum from your past employer or one who spoke at your club, or a speaker from your past employer" },
+    { label: "Warm", points: "2 points", example: "a CBS alum, or a speaker at a club you're in" },
+    { label: "Light", points: "1 point", example: "a campus or club speaker with nothing else in common" },
+  ],
+  order: "People are ordered by tie strength. At equal strength, the person fewer CBS students messaged this week comes first.",
+} as const;
 
 export type TieKind = "club" | "employer" | "alum" | "speaker";
 export interface TieReason {
   kind: TieKind;
   text: string;
+  /** false for context that doesn't relate to the student (e.g. an alum's talk at a club you're not in) */
+  relevant: boolean;
 }
+const article = (w: string) => (/^[AEIOU]/i.test(w) ? "an" : "a");
 export interface Tie {
   cbsLink: 0 | 1 | 2;
   sharedGround: 0 | 1 | 2;
@@ -135,14 +179,20 @@ export function tieFor(person: Person, profile: Profile | null, affiliations: Af
 
   const reasons: TieReason[] = [];
   const first = person.name.split(" ")[0];
-  sharedClubs.forEach((c) => reasons.push({ kind: "club", text: `Spoke at the ${clubShort(c.clubId)}, which you're in (${c.event}, ${monthYear(c.date)})` }));
-  if (sharedEmployers.length) reasons.push({ kind: "employer", text: `You both worked at ${sharedEmployers.map(nameOf).join(" and ")}` });
-  if (alum) reasons.push({ kind: "alum", text: `CBS ${person.cbsClassYear} alum${sameProgram ? `, same program as you` : ""}` });
+  sharedClubs.forEach((c) => reasons.push({ kind: "club", relevant: true, text: `Spoke at the ${clubShort(c.clubId)}, which you're in (${c.event}, ${monthYear(c.date)})` }));
+  if (sharedEmployers.length) reasons.push({ kind: "employer", relevant: true, text: `You both worked at ${sharedEmployers.map(nameOf).join(" and ")}` });
+  if (alum) reasons.push({ kind: "alum", relevant: true, text: `CBS ${person.cbsClassYear} alum${sameProgram ? ", same program as you" : ""}` });
   affs
     .filter((a) => !(a.type === "Club event speaker" && a.clubId && profile?.clubs.includes(a.clubId)))
-    .forEach((a) =>
-      reasons.push({ kind: "speaker", text: a.type === "Campus speaker" ? `Spoke at CBS: ${a.eventName} (${monthYear(a.eventDate)})` : `${first} spoke at a ${clubShort(a.clubId!)} event (${monthYear(a.eventDate)})` })
-    );
+    .forEach((a) => {
+      const club = a.clubId ? clubShort(a.clubId) : "";
+      reasons.push({
+        kind: "speaker",
+        // A talk is the CBS link for a non-alum; for an alum it is only context (X8).
+        relevant: !alum,
+        text: a.type === "Campus speaker" ? `Spoke at CBS: ${a.eventName} (${monthYear(a.eventDate)})` : `${first} spoke at ${article(club)} ${club} event (${monthYear(a.eventDate)})`,
+      });
+    });
   const primary = KIND_ORDER.find((k) => reasons.some((r) => r.kind === k)) ?? null;
   const otherEvents = affs
     .filter((a) => !(a.type === "Club event speaker" && a.clubId && profile?.clubs.includes(a.clubId)))

@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import type { PersonCardData } from "../lib/compute";
-import { CONTACT_LOAD_NUDGE, affsOf, fmtDate } from "../lib/compute";
+import { CONTACT_LOAD_NUDGE, affsOf, fmtDate, responsiveness } from "../lib/compute";
 import { useBridge } from "../lib/store";
 import { Avatar, ExtLink, Icon, TiePill, tieClass } from "./ui";
 
@@ -18,6 +18,23 @@ export function LoadLine({ n, first }: { n: number; first: string }) {
       {n} CBS {n === 1 ? "student" : "students"} messaged {first} this week
     </span>
   );
+}
+
+/** L1: "Likely to respond" or "Busy this week". A tag only, never a percentage, and only after 5+ logged messages. */
+export function RespondTag({ r }: { r: ReturnType<typeof responsiveness> }) {
+  if (r.busy)
+    return (
+      <span className="pill warm" title="5 or more CBS students messaged this person in the last 7 days">
+        Busy this week
+      </span>
+    );
+  if (r.likely)
+    return (
+      <span className="pill good" title="CBS students have logged replies from this person recently">
+        Likely to respond
+      </span>
+    );
+  return null;
 }
 
 /** Requirement 5: name, title, CBS affiliation, why they relate to me, LinkedIn link, and how many CBS students messaged them in the last 7 days. */
@@ -42,14 +59,23 @@ export default function PersonCard({ data }: { data: PersonCardData }) {
             {person.name}
           </button>
           <TiePill tie={tie} />
+          <RespondTag r={responsiveness(person.id, db.interactions)} />
         </div>
         <div className="ttl">{position.title}</div>
         <div className="small muted">{affiliationLabel(person.cbsClassYear, affsOf(person.id, db.affiliations))}</div>
         <ul className="why" aria-label={`Why ${first} relates to you`}>
-          {tie.reasons.slice(0, 3).map((r, i) => (
-            <li key={i}>{r.text}</li>
-          ))}
+          {tie.reasons
+            .filter((r) => r.relevant)
+            .slice(0, 3)
+            .map((r, i) => (
+              <li key={i}>{r.text}</li>
+            ))}
         </ul>
+        {tie.reasons.some((r) => !r.relevant) && (
+          <div className="small muted" style={{ marginTop: 4 }}>
+            Also: {tie.reasons.filter((r) => !r.relevant).map((r) => r.text.replace(new RegExp(`^${first} `), "")).join("; ")}
+          </div>
+        )}
         {mine.length > 0 && (
           <div className="small" style={{ marginTop: 6, color: "var(--good)", fontWeight: 600 }}>
             {Icon.check()} You: {mine[0].type.toLowerCase()} {fmtDate(mine[0].date, { month: "short", day: "numeric" })}

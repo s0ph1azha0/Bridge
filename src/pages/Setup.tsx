@@ -1,8 +1,17 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useBridge, useToast } from "../lib/store";
 import { CLUBS, FUNCTIONS, employersInText } from "../data/helpers";
 import { BridgeMark, Icon } from "../components/ui";
+import { peopleCards } from "../lib/compute";
+import type { Priority, Profile } from "../data/types";
+
+const PRIORITIES: { id: Priority; label: string; hint: string }[] = [
+  { id: "warmth", label: "Warmest intro", hint: "People you share the most with" },
+  { id: "fit", label: "Role fit", hint: "Open roles in your target functions" },
+  { id: "funding", label: "Funding size", hint: "Most capital raised" },
+  { id: "momentum", label: "Growth momentum", hint: "Biggest step-up and team growth" },
+];
 
 const PROGRAMS = [
   { id: "MBA", label: "MBA" },
@@ -27,9 +36,9 @@ export default function Setup() {
   const [clubs, setClubs] = useState<string[]>(profile?.clubs ?? []);
   const [emps, setEmps] = useState<string[]>(profile?.pastEmployers ?? []);
   const [bg, setBg] = useState(profile?.background ?? "");
+  const [priority, setPriority] = useState<Priority>(profile?.priority ?? "warmth");
   const [clubQ, setClubQ] = useState("");
   const [tried, setTried] = useState(false);
-  const started = useRef(Date.now());
 
   const toggle = (list: string[], set: (v: string[]) => void, id: string) => set(list.includes(id) ? list.filter((x) => x !== id) : [...list, id]);
   const employerName = (id: string) => db.employers.find((e) => e.id === id)?.name ?? id;
@@ -42,18 +51,20 @@ export default function Setup() {
     e.preventDefault();
     setTried(true);
     if (missing.length) return;
-    saveProfile(
-      { firstName: firstName.trim(), lastName: lastName.trim() },
-      { program, classYear, targetFunctions: fns, needsVisa: !!visa, clubs, pastEmployers: emps, background: bg.trim() }
-    );
-    if (editing) {
-      toast("Set-up saved. Your ties and drafts now use it.");
-      nav(-1);
-    } else {
-      const secs = Math.round((Date.now() - started.current) / 1000);
-      toast(`Set up in ${secs < 60 ? `${secs} ${secs === 1 ? "second" : "seconds"}` : `${Math.floor(secs / 60)} min ${secs % 60} s`}. Here are your companies.`);
-      nav("/companies");
-    }
+    const next: Omit<Profile, "id" | "userId"> = { program, classYear, targetFunctions: fns, needsVisa: !!visa, clubs, pastEmployers: emps, background: bg.trim(), priority };
+    saveProfile({ firstName: firstName.trim(), lastName: lastName.trim() }, next);
+    // A2: point at the payoff, not the timer.
+    const preview = { ...next, id: "preview", userId: user?.id ?? "" };
+    const tops = db.companies.map((c) => peopleCards(c.id, preview, db)[0]).filter(Boolean);
+    const strong = db.companies.flatMap((c) => peopleCards(c.id, preview, db)).filter((p) => p.tie.label === "Strong");
+    const strongCos = new Set(strong.map((p) => p.position.companyId)).size;
+    const warmCos = tops.filter((p) => p.tie.strength >= 2).length;
+    const payoff = strong.length
+      ? `You have ${strong.length} strong ${strong.length === 1 ? "tie" : "ties"} across ${strongCos} ${strongCos === 1 ? "company" : "companies"}.`
+      : `You have a warm way into ${warmCos} ${warmCos === 1 ? "company" : "companies"}.`;
+    toast(editing ? `Set-up saved. ${payoff}` : payoff);
+    if (editing) nav(-1);
+    else nav("/for-you");
   };
 
   return (
@@ -201,6 +212,21 @@ export default function Setup() {
               {Icon.shield()}
               <span>Used only to write your messages. Never shared with employers.</span>
             </div>
+          </div>
+
+          <div className="q" role="group" aria-labelledby="q-pri">
+            <span className="qlabel" id="q-pri">
+              What matters most to you in a company?
+            </span>
+            <div className="chips">
+              {PRIORITIES.map((p) => (
+                <button type="button" key={p.id} className="chip" aria-pressed={priority === p.id} onClick={() => setPriority(p.id)} title={p.hint}>
+                  {priority === p.id && Icon.check()}
+                  {p.label}
+                </button>
+              ))}
+            </div>
+            <small className="muted">{PRIORITIES.find((p) => p.id === priority)!.hint}. This sets how companies are sorted; you can change it any time.</small>
           </div>
 
           {tried && missing.length > 0 && <div className="callout crit">Add {missing.join(", ")} to continue.</div>}

@@ -1,7 +1,7 @@
 import { useBridge } from "../lib/store";
-import { cbsTieCount, daysSince, thisWeekRange } from "../lib/compute";
+import { cbsTieCount, daysSince, liveRoles, thisWeekRange } from "../lib/compute";
 
-/** CMC Totals (after the MVP; shown in mockups). Read-only aggregates. No student names, and no filtering or ranking of students. */
+/** CMC view: read-only aggregates for the payer. No student names, and no filtering or ranking of students. */
 export default function CmcTotals() {
   const { db } = useBridge();
   const { start, end } = thisWeekRange();
@@ -17,6 +17,7 @@ export default function CmcTotals() {
       ties: cbsTieCount(c.id, db),
       savers: new Set(db.saved.filter((s) => s.companyId === c.id).map((s) => s.userId)).size,
       list: db.interest.filter((e) => e.companyId === c.id && !e.removed).length,
+      roles: liveRoles(c.id, db.roles).length,
       week: sentThisWeek(c.id),
       last: lastOutreach(c.id),
     }))
@@ -24,16 +25,25 @@ export default function CmcTotals() {
   const withTie = rows.filter((r) => r.ties > 0).length;
   const quiet = rows.filter((r) => r.last === null || r.last > 90);
   const maxWeek = Math.max(1, ...rows.map((r) => r.week));
+  // B2: more students on the interest list than open business roles is the CMC's opening to ask.
+  const asks = rows.filter((r) => r.list >= 2 && r.list > r.roles).sort((a, b) => b.list - b.roles - (a.list - a.roles));
 
   return (
     <>
       <div className="page-head">
         <div>
-          <div className="eyebrow">CMC viewer · after the MVP</div>
-          <h1>CBS and NYC startups, in totals</h1>
-          <p>Read-only aggregates from student activity. No student names, and the CMC never filters or ranks students.</p>
+          <div className="eyebrow">CMC view · read-only</div>
+          <h1>Where CBS demand meets NYC startups</h1>
+          <p>
+            What the CMC sees: which startups students are pursuing, how many have joined each interest list, and where demand outruns posted roles. Aggregates only. No student names, and the CMC never filters or ranks students.
+          </p>
         </div>
       </div>
+      {asks.length > 0 && (
+        <div className="banner" style={{ background: "var(--warm-soft)", color: "var(--warm)" }}>
+          <b>Where to ask a startup to post a role or host a coffee chat:</b> {asks.map((r) => `${r.c.name} (${r.list} students, ${r.roles} ${r.roles === 1 ? "role" : "roles"})`).join(", ")}.
+        </div>
+      )}
       <div className="tiles">
         <div className="tile">
           <div className="n">
@@ -66,6 +76,8 @@ export default function CmcTotals() {
                   <th className="num">CBS ties</th>
                   <th className="num">Students who saved</th>
                   <th className="num">Interest list</th>
+                  <th className="num">Open roles</th>
+                  <th>Demand vs supply</th>
                   <th className="num">Messages this week</th>
                   <th className="num">Last outreach</th>
                 </tr>
@@ -80,9 +92,13 @@ export default function CmcTotals() {
                     <td className="num">{r.ties}</td>
                     <td className="num">{r.savers}</td>
                     <td className="num">{r.list}</td>
+                    <td className="num">{r.roles}</td>
+                    <td>
+                      <Demand list={r.list} roles={r.roles} />
+                    </td>
                     <td className="num">{r.week}</td>
                     <td className="num" style={r.last === null || r.last > 90 ? { color: "var(--crit)" } : undefined}>
-                      {r.last === null ? "Never" : `${r.last} d ago`}
+                      {r.last === null ? "Never" : r.last === 0 ? "Today" : `${r.last} d ago`}
                     </td>
                   </tr>
                 ))}
@@ -126,4 +142,11 @@ export default function CmcTotals() {
       </div>
     </>
   );
+}
+
+function Demand({ list, roles }: { list: number; roles: number }) {
+  if (!list) return <span className="small muted">No sign-ups yet</span>;
+  if (!roles) return <span className="pill crit">{list} students, no roles</span>;
+  if (list > roles) return <span className="pill warm">{(list / roles).toFixed(1)} students per role</span>;
+  return <span className="pill good">Roles cover demand</span>;
 }

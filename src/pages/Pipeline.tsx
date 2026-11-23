@@ -56,7 +56,7 @@ export default function Pipeline() {
       <div className="stat-row" style={{ marginBottom: 18 }}>
         <div className="stat">
           <div className="n">{mySaved.length}</div>
-          <div className="l">companies saved</div>
+          <div className="l">{mySaved.length === 1 ? "company" : "companies"} in your pipeline</div>
         </div>
         <div className="stat">
           <div className="n">{actionsThisWeek}</div>
@@ -126,18 +126,34 @@ export default function Pipeline() {
                   const ints = myInteractions.filter((i) => i.companyId === c.id);
                   const last = [...ints].sort((a, b) => b.date.localeCompare(a.date))[0];
                   const due = dueThisWeek.find((i) => i.companyId === c.id);
+                  // L2: one-tap reply logging for the person last messaged here.
+                  const awaiting = last && (last.type === "Message sent" || last.type === "Follow-up") ? person(last.personId) : undefined;
                   return (
-                    <button key={s.id} className="pcard" aria-pressed={selId === c.id} onClick={() => select(selId === c.id ? null : c.id)}>
-                      <span className="nm">
-                        <CompanyLogo name={c.name} size="sm" />
-                        {c.name}
-                      </span>
-                      <span className="sm">{last ? `${last.type} ${relDays(last.date)}` : `Saved ${relDays(s.dateSaved)}`}</span>
-                      <span className="sm">
-                        {new Set(ints.map((i) => i.personId)).size} {new Set(ints.map((i) => i.personId)).size === 1 ? "person" : "people"} contacted
-                      </span>
-                      {due && <span className={`flag${due.followUpDue! < today ? " over" : ""}`}>Follow-up {due.followUpDue! < today ? "overdue" : "due " + fmtDate(due.followUpDue!, { weekday: "short" })}</span>}
-                    </button>
+                    <div key={s.id} className={`pcard${selId === c.id ? " on" : ""}`}>
+                      <button className="pmain" aria-pressed={selId === c.id} onClick={() => select(selId === c.id ? null : c.id)}>
+                        <span className="nm">
+                          <CompanyLogo name={c.name} size="sm" />
+                          {c.name}
+                        </span>
+                        <span className="sm">{last ? `${last.type} ${relDays(last.date)}` : `Saved ${relDays(s.dateSaved)}`}</span>
+                        <span className="sm">
+                          {new Set(ints.map((i) => i.personId)).size} {new Set(ints.map((i) => i.personId)).size === 1 ? "person" : "people"} contacted
+                        </span>
+                        {due && <span className={`flag${due.followUpDue! < today ? " over" : ""}`}>Follow-up {due.followUpDue! < today ? "overdue" : "due " + fmtDate(due.followUpDue!, { weekday: "short" })}</span>}
+                      </button>
+                      {awaiting && (
+                        <button
+                          className="btn ghost sm preply"
+                          onClick={() => {
+                            logInteraction({ personId: awaiting.id, companyId: c.id, type: "Reply", via: "Logged manually" });
+                            if (due) updateInteraction(due.id, { followUpDue: null });
+                            toast(`Reply from ${awaiting.name.split(" ")[0]} logged. ${c.name} moved to In conversation.`);
+                          }}
+                        >
+                          + {awaiting.name.split(" ")[0]} replied
+                        </button>
+                      )}
+                    </div>
                   );
                 })}
                 {items.length === 0 && <span className="small muted" style={{ padding: "4px 6px" }}>None yet</span>}

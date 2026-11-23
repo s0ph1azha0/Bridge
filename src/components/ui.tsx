@@ -66,6 +66,17 @@ export const Icon = {
       <rect x="17" y="4" width="4" height="7" rx="1.2" />
     </svg>
   ),
+  door: () => (
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" {...P}>
+      <path d="M5 21V4a1 1 0 0 1 1-1h9l4 2v16" />
+      <path d="M3 21h18M12 12.5v.5" />
+    </svg>
+  ),
+  chart: () => (
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" {...P}>
+      <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />
+    </svg>
+  ),
   people: () => (
     <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" {...P}>
       <circle cx="9" cy="8" r="3" />

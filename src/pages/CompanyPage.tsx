@@ -10,7 +10,9 @@ import {
   functionsHired,
   monthsSinceRound,
   money,
+  newRoles30d,
   peopleCards,
+  TIE_RULE,
   roleStatus,
   stepUp,
   tieCountsByType,
@@ -46,7 +48,12 @@ export default function CompanyPage() {
   const cards = peopleCards(c.id, profile, db);
   const counts = tieCountsByType(cards);
   const allRoles = db.roles.filter((r) => r.companyId === c.id);
-  const roles = allRoles.filter((r) => roleStatus(r) !== "Closed").sort((a, b) => (roleStatus(a) === "Live" ? 0 : 1) - (roleStatus(b) === "Live" ? 0 : 1));
+  // P3: a student who needs sponsorship sees "Stated no" roles last, still exactly as posted.
+  const visaLast = (r: Role) => (profile?.needsVisa && r.visaStated === "No" ? 1 : 0);
+  const roles = allRoles
+    .filter((r) => roleStatus(r) !== "Closed")
+    .sort((a, b) => visaLast(a) - visaLast(b) || (roleStatus(a) === "Live" ? 0 : 1) - (roleStatus(b) === "Live" ? 0 : 1));
+  const newRoles = newRoles30d(c.id, db.roles);
   const closed = allRoles.filter((r) => roleStatus(r) === "Closed");
   const months = monthsSinceRound(c);
   const step = stepUp(c);
@@ -68,6 +75,7 @@ export default function CompanyPage() {
           <div className="facts" style={{ marginTop: 8 }}>
             <span>{c.sector}</span>
             <span>{c.hq}, New York</span>
+            <span>{c.headcountBand} people</span>
             <span>{cbsTieCount(c.id, db)} CBS ties</span>
           </div>
         </div>
@@ -107,14 +115,14 @@ export default function CompanyPage() {
             </h2>
             <div className="stats">
               <div>
-                <div className="k">Stage</div>
-                <div className="v">{c.stage}</div>
-                <div className="s">{c.headcountBand} people</div>
-              </div>
-              <div>
                 <div className="k">Total raised</div>
                 <div className="v">{money(c.totalRaised)}</div>
                 <div className="s">All rounds</div>
+              </div>
+              <div>
+                <div className="k">Last valuation</div>
+                <div className="v">{c.lastValuation ? money(c.lastValuation) : "Undisclosed"}</div>
+                <div className="s">At the {c.lastRoundName}</div>
               </div>
               <div>
                 <div className="k">Last round</div>
@@ -124,11 +132,9 @@ export default function CompanyPage() {
                 </div>
               </div>
               <div>
-                <div className="k">Location</div>
-                <div className="v" style={{ fontSize: 18 }}>
-                  {c.hq}
-                </div>
-                <div className="s">New York</div>
+                <div className="k">Stage</div>
+                <div className="v">{c.stage}</div>
+                <div className="s">{c.headcountBand} people</div>
               </div>
             </div>
             <div className="small muted" style={{ marginTop: 8, display: "flex", gap: 12, flexWrap: "wrap" }}>
@@ -152,8 +158,12 @@ export default function CompanyPage() {
                 <div className="k">{step ? `step-up from the prior round (${money(c.priorRoundSize!)} → ${money(c.lastRoundSize)})` : "step-up: no prior round on record"}</div>
               </div>
               <div>
-                <div className="v">{c.headcountBand}</div>
-                <div className="k">headcount band</div>
+                <div className="v">{c.headcountGrowth6m === null ? "Not known" : `${c.headcountGrowth6m > 0 ? "+" : ""}${c.headcountGrowth6m}%`}</div>
+                <div className="k">headcount change over 6 months (now {c.headcountBand})</div>
+              </div>
+              <div>
+                <div className="v">{newRoles}</div>
+                <div className="k">new business {newRoles === 1 ? "role" : "roles"} posted in the last 30 days</div>
               </div>
             </div>
           </section>
@@ -173,7 +183,7 @@ export default function CompanyPage() {
             {roles.length ? (
               <div className="roles">
                 {roles.map((r) => (
-                  <RoleRow key={r.id} r={r} onFlag={() => setFlag({ type: "Role", id: r.id })} />
+                  <RoleRow key={r.id} r={r} needsVisa={profile?.needsVisa} onFlag={() => setFlag({ type: "Role", id: r.id })} />
                 ))}
               </div>
             ) : (
@@ -218,12 +228,34 @@ export default function CompanyPage() {
                 ))}
               </div>
             ) : (
-              <div className="empty">
-                No CBS people found at {c.name} yet. You can still reach out cold, or join the CBS interest list so CBS can share your resume with the team.
+              <div className="empty" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <b style={{ color: "var(--ink)" }}>No warm path yet</b>
+                <span>We haven't found anyone at {c.name} with a CBS tie. Three ways in until we do:</span>
+                <ol style={{ margin: 0, paddingLeft: 20, display: "flex", flexDirection: "column", gap: 4 }}>
+                  <li>
+                    {joined ? (
+                      "You're on the CBS interest list, so CBS can share your resume with the team."
+                    ) : (
+                      <>
+                        <button className="linkbtn" onClick={() => setJoining(true)}>
+                          Join the CBS interest list
+                        </button>{" "}
+                        so CBS can share your resume with the team.
+                      </>
+                    )}
+                  </li>
+                  <li>
+                    <ExtLink href={`https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(`${c.name} Columbia Business School`)}`} sampleNote={`Sample company: in the MVP this opens a LinkedIn search for CBS alumni at ${c.name}.`}>
+                      Search LinkedIn for CBS alumni at {c.name}
+                    </ExtLink>
+                    , then flag them so the next student has a path.
+                  </li>
+                  <li>Ask the CMC or the club closest to {c.sector.toLowerCase()} whether they know someone on the team.</li>
+                </ol>
               </div>
             )}
             <p className="small muted" style={{ marginTop: 10 }}>
-              Ordered by how strong your tie is: shared club, then shared past employer, then CBS alum, then campus speaker. People are listed from public, CBS-linked sources only, and anyone can ask to be removed.
+              {TIE_RULE.summary} {TIE_RULE.order} People are listed from public, CBS-linked sources only, and anyone can ask to be removed.
             </p>
           </section>
         </div>
@@ -303,7 +335,7 @@ export default function CompanyPage() {
   );
 }
 
-function RoleRow({ r, onFlag }: { r: Role & { summary?: string }; onFlag: () => void }) {
+function RoleRow({ r, onFlag, needsVisa }: { r: Role & { summary?: string }; onFlag: () => void; needsVisa?: boolean }) {
   const status = roleStatus(r);
   const mapped = !FN_WORDS[r.functionId]?.test(r.titleAsPosted);
   return (
@@ -318,6 +350,7 @@ function RoleRow({ r, onFlag }: { r: Role & { summary?: string }; onFlag: () => 
         {status === "Live" ? <span className="pill good">Live</span> : <span className="pill grey" title="Not re-verified in the last 14 days">Unverified</span>}
       </div>
       {r.summary && <p className="sum">{r.summary}</p>}
+      {needsVisa && r.visaStated === "No" && <p className="small" style={{ gridColumn: "1 / -1", color: "var(--crit)" }}>This posting states no visa sponsorship, and you said you need it.</p>}
       <div className="terms">
         <span>
           <b>{r.jobType}</b>

@@ -12,7 +12,7 @@ export default function SignIn() {
   const [code, setCode] = useState("");
   const [err, setErr] = useState("");
 
-  if (user) return <Navigate to={profile ? "/companies" : "/setup"} replace />;
+  if (user) return <Navigate to={profile ? "/for-you" : "/setup"} replace />;
 
   const sendCode = (e: React.FormEvent) => {
     e.preventDefault();

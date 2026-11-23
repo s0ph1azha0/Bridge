@@ -100,7 +100,9 @@ function useBridgeState() {
   }, [seed, local]);
 
   const user = local.session ? local.users.find((u) => u.id === local.session!.userId) ?? null : null;
-  const profile = user ? local.profiles.find((p) => p.userId === user.id) ?? null : null;
+  const stored = user ? local.profiles.find((p) => p.userId === user.id) ?? null : null;
+  // Profiles saved before v2.1 have no "What matters most?" answer yet.
+  const profile = useMemo(() => (stored ? { ...stored, priority: stored.priority ?? "warmth" } : null), [stored]);
 
   /* ---------- Sign in ---------- */
   const requestCode = useCallback(
