@@ -316,8 +316,8 @@ main { padding: 24px 0 80px; min-height: calc(100vh - var(--bar-h) - 60px); }
 .history { display: flex; flex-direction: column; gap: 8px; border-left: 2px solid var(--line); padding-left: 14px; margin-left: 4px; }
 .history .h { font-size: 14px; }
 .history time { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-right: 8px; }
-@keyframes slide { from { transform: translateX(30px); opacity: 0; } to { transform: none; opacity: 1; } }
-@keyframes pop { from { transform: translate(-50%, -48%); opacity: 0; } to { transform: translate(-50%, -50%); opacity: 1; } }
+@keyframes slide { from { transform: translateX(40px); } to { transform: none; } }
+@keyframes pop { from { transform: translate(-50%, -47%); } to { transform: translate(-50%, -50%); } }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 
 /* ---------- Network map ---------- */
@@ -413,7 +413,9 @@ table.t td.num, table.t th.num { text-align: right; font-family: var(--mono); fo
 }
 
 /* ---------- Responsive ---------- */
+.mobile-only { display: none !important; }
 @media (max-width: 1020px) {
+  .mobile-only { display: inline-flex !important; }
   .colayout { grid-template-columns: 1fr; }
   .sticky-side { position: static; }
   .netgrid { grid-template-columns: 1fr; }
@@ -442,6 +444,7 @@ table.t td.num, table.t th.num { text-align: right; font-family: var(--mono); fo
   .momentum, .tiecounts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .cohead { grid-template-columns: auto minmax(0, 1fr); }
   .cohead .acts { grid-column: 1 / -1; justify-content: flex-start; }
+  .cohead .acts .btn { white-space: normal; text-align: left; }
   .cohead h1 { font-size: 27px; }
   .co { grid-template-columns: minmax(0, 1fr) auto; }
   .co .logo { display: none; }

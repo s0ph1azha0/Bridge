@@ -86,6 +86,15 @@ export default function CompanyPage() {
           <button className="btn ghost" onClick={() => setFlag({ type: "Company", id: c.id })}>
             {Icon.flag()} Flag something wrong
           </button>
+          {joined ? (
+            <Link to={`/companies/${c.id}/interest`} className="btn ghost mobile-only">
+              {Icon.check()} On the interest list
+            </Link>
+          ) : (
+            <button className="btn accent mobile-only" onClick={() => setJoining(true)}>
+              I'm interested: add me to the CBS interest list
+            </button>
+          )}
         </div>
       </header>
 
